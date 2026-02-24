@@ -1,4 +1,4 @@
-# Around the U.S. (Portuguese Version)
+# Around the U.S.
 
 This is a responsive web application developed as part of the TripleTen Software Engineering bootcamp. The project showcases a social networking style landing page where users can share photos of places they've visited, like posts, and edit their profiles.
 
