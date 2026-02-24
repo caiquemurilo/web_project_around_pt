@@ -131,11 +131,11 @@ function handleNewCardFormSubmit(evt) {
   closeModal(newCardModal)
 }
 
-function handleOpenEditModal() {
+function handleOpenNewCardModal() {
   openModal(newCardModal)
 }
 
-newCardOpenBtn.addEventListener('click', handleOpenEditModal)
+newCardOpenBtn.addEventListener('click', handleOpenNewCardModal)
 
 newCardCloseBtn.addEventListener('click', function () {
   closeModal(newCardModal)
