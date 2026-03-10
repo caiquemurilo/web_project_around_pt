@@ -26,10 +26,11 @@ const initialCards = [
 ]
 const cardsContainer = document.querySelector('.cards__list')
 
-
 const profileEditModal = document.querySelector('#edit-popup')
-const inputsProfileEditModal = profileEditModal.querySelectorAll('.popup__input')
-const submitButtonProfileEditModal = profileEditModal.querySelector('.popup__button')
+const inputsProfileEditModal =
+  profileEditModal.querySelectorAll('.popup__input')
+const submitButtonProfileEditModal =
+  profileEditModal.querySelector('.popup__button')
 const profileEditOpenBtn = document.querySelector('.profile__edit-button')
 const profileEditCloseBtn = profileEditModal.querySelector('.popup__close')
 const profileEditForm = profileEditModal.querySelector('#edit-profile-form')
@@ -41,6 +42,8 @@ const profileTitle = document.querySelector('.profile__title')
 const profileDescription = document.querySelector('.profile__description')
 
 const newCardModal = document.querySelector('#new-card-popup')
+const inputsNewCardModal = newCardModal.querySelectorAll('.popup__input')
+const submitButtonNewCardModal = newCardModal.querySelector('.popup__button')
 const newCardOpenBtn = document.querySelector('.profile__add-button')
 const newCardCloseBtn = newCardModal.querySelector('.popup__close')
 const newCardForm = newCardModal.querySelector('#new-card-form')
@@ -72,10 +75,7 @@ function handleProfileFormSubmit(evt) {
   closeModal(profileEditModal)
 }
 
-function getCardElement(
-  name = 'Lugar sem nome',
-  link = './images/placeholder.jpg'
-) {
+function getCardElement(name, link) {
   const cardTemplate = document
     .querySelector('#card-template')
     .content.querySelector('.card')
@@ -151,7 +151,6 @@ function toggleButtonState(inputList, buttonElement) {
   }
 }
 
-
 profileEditOpenBtn.addEventListener('click', handleOpenEditModal)
 
 profileEditCloseBtn.addEventListener('click', function () {
@@ -187,3 +186,13 @@ inputsProfileEditModal.forEach(input => {
   })
 })
 
+inputsNewCardModal.forEach(input => {
+  input.addEventListener('input', () => {
+    if (!input.validity.valid) {
+      showInputError(input, input.validationMessage)
+    } else {
+      hideInputError(input)
+    }
+    toggleButtonState(inputsNewCardModal, submitButtonNewCardModal)
+  })
+})
