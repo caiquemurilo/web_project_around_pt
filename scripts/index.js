@@ -68,6 +68,7 @@ function fillProfileForm() {
 function handleOpenEditModal() {
   openModal(profileEditModal)
   fillProfileForm()
+  document.addEventListener('keydown', profileEditCloseKey)
 }
 function handleProfileFormSubmit(evt) {
   evt.preventDefault()
@@ -116,10 +117,7 @@ function handleNewCardFormSubmit(evt) {
     getCardElement(cardNameInput.value, cardLinkInput.value)
   )
   closeModal(newCardModal)
-}
-
-function handleOpenNewCardModal() {
-  openModal(newCardModal)
+  document.addEventListener('keydown', newCardCloseKey)
 }
 
 function showInputError(element, errorMessage) {
@@ -150,6 +148,25 @@ function toggleButtonState(inputList, buttonElement) {
     buttonElement.disabled = false
     console.log('entrou no else de disabled = false')
   }
+}
+
+function profileEditCloseKey(e) {
+  if (e.key === 'Escape') {
+    console.log('acionou o trigger profileEditCloseKey')
+    closeModal(profileEditModal)
+  }
+}
+
+function newCardCloseKey(e) {
+  if (e.key === 'Escape') {
+    console.log('acionou o trigger newCardCloseKey')
+    closeModal(newCardModal)
+  }
+}
+
+function handleOpenNewCardModal() {
+  openModal(newCardModal)
+  document.addEventListener('keydown', newCardCloseKey)
 }
 
 profileEditOpenBtn.addEventListener('click', handleOpenEditModal)
