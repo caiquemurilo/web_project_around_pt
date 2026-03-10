@@ -61,13 +61,15 @@ function openModal(modal) {
 function closeModal(modal) {
   modal.classList.remove('popup_is-opened')
   modal.querySelector('form').reset()
-  const inputsModal = modal.querySelectorAll('.popup__input');
-  inputsModal.forEach((input) => {
+  resetFormValidation(modal)
+}
+function resetFormValidation(modal) {
+  const inputsModal = modal.querySelectorAll('.popup__input')
+  inputsModal.forEach(input => {
     hideInputError(input)
   })
-  
-
 }
+
 function fillProfileForm() {
   nameInput.value = profileTitle.textContent
   jobInput.value = profileDescription.textContent
