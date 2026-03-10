@@ -54,6 +54,7 @@ const imagePopupModal = document.querySelector('#image-popup')
 const imagePopupCloseBtn = imagePopupModal.querySelector('.popup__close')
 const imagePopup = imagePopupModal.querySelector('.popup__image')
 const captionPopup = imagePopupModal.querySelector('.popup__caption')
+
 function openModal(modal) {
   modal.classList.add('popup_is-opened')
 }
@@ -195,4 +196,22 @@ inputsNewCardModal.forEach(input => {
     }
     toggleButtonState(inputsNewCardModal, submitButtonNewCardModal)
   })
+})
+
+profileEditModal.addEventListener('click', e => {
+  if (
+    e.target.classList.contains('popup') ||
+    e.target.classList.contains('popup__close')
+  ) {
+    closeModal(profileEditModal)
+  }
+})
+
+newCardModal.addEventListener('click', e => {
+  if (
+    e.target.classList.contains('popup') ||
+    e.target.classList.contains('popup__close')
+  ) {
+    closeModal(newCardModal)
+  }
 })
