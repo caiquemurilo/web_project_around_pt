@@ -26,7 +26,10 @@ const initialCards = [
 ]
 const cardsContainer = document.querySelector('.cards__list')
 
+
 const profileEditModal = document.querySelector('#edit-popup')
+const inputsProfileEditModal = profileEditModal.querySelectorAll('.popup__input')
+const submitButtonProfileEditModal = profileEditModal.querySelector('.popup__button')
 const profileEditOpenBtn = document.querySelector('.profile__edit-button')
 const profileEditCloseBtn = profileEditModal.querySelector('.popup__close')
 const profileEditForm = profileEditModal.querySelector('#edit-profile-form')
@@ -69,14 +72,6 @@ function handleProfileFormSubmit(evt) {
   closeModal(profileEditModal)
 }
 
-profileEditOpenBtn.addEventListener('click', handleOpenEditModal)
-
-profileEditCloseBtn.addEventListener('click', function () {
-  closeModal(profileEditModal)
-})
-
-profileEditForm.addEventListener('submit', handleProfileFormSubmit)
-
 function getCardElement(
   name = 'Lugar sem nome',
   link = './images/placeholder.jpg'
@@ -110,18 +105,9 @@ function getCardElement(
 
   return cardElement
 }
-imagePopupCloseBtn.addEventListener('click', function () {
-  closeModal(imagePopupModal)
-})
-
 function renderCard(name, link, container) {
   container.append(getCardElement(name, link))
 }
-
-initialCards.forEach(function (card) {
-  // console.log(card)
-  renderCard(card.name, card.link, cardsContainer)
-})
 
 function handleNewCardFormSubmit(evt) {
   evt.preventDefault()
@@ -135,9 +121,69 @@ function handleOpenNewCardModal() {
   openModal(newCardModal)
 }
 
+function showInputError(element, errorMessage) {
+  const errorElement = document.querySelector(`.${element.id}-input-error`)
+  element.classList.add('popup__input_type_error')
+  errorElement.textContent = errorMessage
+  errorElement.classList.add('popup__input-error_active')
+}
+
+function hideInputError(element) {
+  const errorElement = document.querySelector(`.${element.id}-input-error`)
+  element.classList.remove('popup__input_type_error')
+  errorElement.textContent = ''
+  errorElement.classList.remove('form__input-error_active')
+}
+
+function hasInvalidInput(inputList) {
+  return Array.from(inputList).some(function (input) {
+    return !input.validity.valid
+  })
+}
+
+function toggleButtonState(inputList, buttonElement) {
+  if (hasInvalidInput(inputList)) {
+    console.log('entrou no if de disabled = true')
+    buttonElement.disabled = true
+  } else {
+    buttonElement.disabled = false
+    console.log('entrou no else de disabled = false')
+  }
+}
+
+
+profileEditOpenBtn.addEventListener('click', handleOpenEditModal)
+
+profileEditCloseBtn.addEventListener('click', function () {
+  closeModal(profileEditModal)
+})
+
+profileEditForm.addEventListener('submit', handleProfileFormSubmit)
+
+imagePopupCloseBtn.addEventListener('click', function () {
+  closeModal(imagePopupModal)
+})
+
+initialCards.forEach(function (card) {
+  // console.log(card)
+  renderCard(card.name, card.link, cardsContainer)
+})
+
 newCardOpenBtn.addEventListener('click', handleOpenNewCardModal)
 
 newCardCloseBtn.addEventListener('click', function () {
   closeModal(newCardModal)
 })
 newCardForm.addEventListener('submit', handleNewCardFormSubmit)
+
+inputsProfileEditModal.forEach(input => {
+  input.addEventListener('input', () => {
+    if (!input.validity.valid) {
+      showInputError(input, input.validationMessage)
+    } else {
+      hideInputError(input)
+    }
+    toggleButtonState(inputsProfileEditModal, submitButtonProfileEditModal)
+  })
+})
+
