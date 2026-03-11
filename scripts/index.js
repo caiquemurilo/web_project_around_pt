@@ -27,8 +27,7 @@ const initialCards = [
 const cardsContainer = document.querySelector('.cards__list')
 
 const profileEditModal = document.querySelector('#edit-popup')
-const inputsProfileEditModal =
-  profileEditModal.querySelectorAll('.popup__input')
+
 const submitButtonProfileEditModal =
   profileEditModal.querySelector('.popup__button')
 const profileEditOpenBtn = document.querySelector('.profile__edit-button')
@@ -42,7 +41,7 @@ const profileTitle = document.querySelector('.profile__title')
 const profileDescription = document.querySelector('.profile__description')
 
 const newCardModal = document.querySelector('#new-card-popup')
-const inputsNewCardModal = newCardModal.querySelectorAll('.popup__input')
+
 const submitButtonNewCardModal = newCardModal.querySelector('.popup__button')
 const newCardOpenBtn = document.querySelector('.profile__add-button')
 const newCardCloseBtn = newCardModal.querySelector('.popup__close')
@@ -60,14 +59,21 @@ function openModal(modal) {
 }
 function closeModal(modal) {
   modal.classList.remove('popup_is-opened')
-  modal.querySelector('form').reset()
-  resetFormValidation(modal)
-}
-function resetFormValidation(modal) {
-  const inputsModal = modal.querySelectorAll('.popup__input')
-  inputsModal.forEach(input => {
-    hideInputError(input)
-  })
+  const form = modal.querySelector('form')
+  if (form) {
+    modal.querySelector('form').reset()
+    resetFormValidation(modal)
+  }
+  if (modal === imagePopupModal) {
+  
+    document.removeEventListener('keydown', imagePopupCloseKey)
+
+  } else if (modal === newCardModal) {
+    console.log('entrou no if do imagepopupmodal')
+    document.removeEventListener('keydown', newCardCloseKey)
+  } else if (modal === profileEditModal ) {
+    document.removeEventListener('keydown', profileEditCloseKey)
+  }
 }
 
 function fillProfileForm() {
@@ -112,6 +118,8 @@ function getCardElement(name, link) {
     imagePopup.alt = name
     captionPopup.textContent = name
     openModal(imagePopupModal)
+    document.addEventListener('keydown', imagePopupCloseKey)
+    
   })
 
   return cardElement
@@ -129,54 +137,33 @@ function handleNewCardFormSubmit(evt) {
   document.addEventListener('keydown', newCardCloseKey)
 }
 
-function showInputError(element, errorMessage) {
-  const errorElement = document.querySelector(`.${element.id}-input-error`)
-  element.classList.add('popup__input_type_error')
-  errorElement.textContent = errorMessage
-  errorElement.classList.add('popup__input-error_active')
-}
-
-function hideInputError(element) {
-  const errorElement = document.querySelector(`.${element.id}-input-error`)
-  element.classList.remove('popup__input_type_error')
-  errorElement.textContent = ''
-  errorElement.classList.remove('form__input-error_active')
-}
-
-function hasInvalidInput(inputList) {
-  return Array.from(inputList).some(function (input) {
-    return !input.validity.valid
-  })
-}
-
-function toggleButtonState(inputList, buttonElement) {
-  if (hasInvalidInput(inputList)) {
-    console.log('entrou no if de disabled = true')
-    buttonElement.disabled = true
-  } else {
-    buttonElement.disabled = false
-    console.log('entrou no else de disabled = false')
-  }
-}
-
-function profileEditCloseKey(e) {
-  if (e.key === 'Escape') {
-    console.log('acionou o trigger profileEditCloseKey')
-    closeModal(profileEditModal)
-  }
-}
-
-function newCardCloseKey(e) {
-  if (e.key === 'Escape') {
-    console.log('acionou o trigger newCardCloseKey')
-    closeModal(newCardModal)
-  }
-}
 
 function handleOpenNewCardModal() {
   openModal(newCardModal)
   document.addEventListener('keydown', newCardCloseKey)
 }
+
+
+function newCardCloseKey(e) {
+  if (e.key === 'Escape') {
+    closeModal(newCardModal)
+    
+  }
+}
+
+function profileEditCloseKey(e) {
+  if (e.key === 'Escape') {
+    closeModal(profileEditModal)
+
+  }
+}
+function imagePopupCloseKey(e) {
+  if (e.key === 'Escape') {
+    closeModal(imagePopupModal)
+
+  }
+}
+
 
 profileEditOpenBtn.addEventListener('click', handleOpenEditModal)
 
@@ -191,7 +178,6 @@ imagePopupCloseBtn.addEventListener('click', function () {
 })
 
 initialCards.forEach(function (card) {
-  // console.log(card)
   renderCard(card.name, card.link, cardsContainer)
 })
 
@@ -201,28 +187,6 @@ newCardCloseBtn.addEventListener('click', function () {
   closeModal(newCardModal)
 })
 newCardForm.addEventListener('submit', handleNewCardFormSubmit)
-
-inputsProfileEditModal.forEach(input => {
-  input.addEventListener('input', () => {
-    if (!input.validity.valid) {
-      showInputError(input, input.validationMessage)
-    } else {
-      hideInputError(input)
-    }
-    toggleButtonState(inputsProfileEditModal, submitButtonProfileEditModal)
-  })
-})
-
-inputsNewCardModal.forEach(input => {
-  input.addEventListener('input', () => {
-    if (!input.validity.valid) {
-      showInputError(input, input.validationMessage)
-    } else {
-      hideInputError(input)
-    }
-    toggleButtonState(inputsNewCardModal, submitButtonNewCardModal)
-  })
-})
 
 profileEditModal.addEventListener('click', e => {
   if (
@@ -239,5 +203,15 @@ newCardModal.addEventListener('click', e => {
     e.target.classList.contains('popup__close')
   ) {
     closeModal(newCardModal)
+  }
+})
+
+
+imagePopupModal.addEventListener('click', e => {
+  if (
+    e.target.classList.contains('popup') ||
+    e.target.classList.contains('popup__close')
+  ) {
+    closeModal(imagePopupModal)
   }
 })
