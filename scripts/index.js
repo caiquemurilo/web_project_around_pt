@@ -1,3 +1,5 @@
+import { Card } from './card.js'
+// import { resetFormValidation } from './validate.js'
 const initialCards = [
   {
     name: 'Vale de Yosemite',
@@ -24,6 +26,7 @@ const initialCards = [
     link: 'https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_lago.jpg'
   }
 ]
+
 const cardsContainer = document.querySelector('.cards__list')
 
 const profileEditModal = document.querySelector('#edit-popup')
@@ -64,14 +67,9 @@ function closeModal(modal) {
     modal.querySelector('form').reset()
     resetFormValidation(modal)
   }
-  if (modal === imagePopupModal) {
-  
-    document.removeEventListener('keydown', imagePopupCloseKey)
-
-  } else if (modal === newCardModal) {
-    console.log('entrou no if do imagepopupmodal')
+  if (modal === newCardModal) {
     document.removeEventListener('keydown', newCardCloseKey)
-  } else if (modal === profileEditModal ) {
+  } else if (modal === profileEditModal) {
     document.removeEventListener('keydown', profileEditCloseKey)
   }
 }
@@ -92,26 +90,26 @@ function handleProfileFormSubmit(evt) {
   closeModal(profileEditModal)
 }
 
-function getCardElement(name, link) {
+/* function getCardElement(name, link) {
   const cardTemplate = document
     .querySelector('#card-template')
     .content.querySelector('.card')
   const cardElement = cardTemplate.cloneNode(true)
   const cardTitle = cardElement.querySelector('.card__title')
-  const cardImage = cardElement.querySelector('.card__image')
-  cardTitle.textContent = name
-  cardImage.alt = name
-  cardImage.src = link
+  const cardImage = cardElement.querySelector('.card__image') 
+  cardTitle.textContent = name 
+  cardImage.alt = name 
+  cardImage.src = link 
 
-  const likeBtn = cardElement.querySelector('.card__like-button')
+  const likeBtn = cardElement.querySelector('.card__like-button') 
   likeBtn.addEventListener('click', function (evt) {
     evt.currentTarget.classList.toggle('card__like-button_is-active')
-  })
+  }) 
 
   const deleteCardBtn = cardElement.querySelector('.card__delete-button')
   deleteCardBtn.addEventListener('click', function (evt) {
     evt.currentTarget.closest('.card').remove()
-  })
+  }) 
 
   cardImage.addEventListener('click', function () {
     imagePopup.src = link
@@ -119,51 +117,48 @@ function getCardElement(name, link) {
     captionPopup.textContent = name
     openModal(imagePopupModal)
     document.addEventListener('keydown', imagePopupCloseKey)
-    
   })
 
   return cardElement
-}
-function renderCard(name, link, container) {
+} */
+/* function renderCard(name, link, container) {
   container.append(getCardElement(name, link))
-}
+} */
 
 function handleNewCardFormSubmit(evt) {
   evt.preventDefault()
-  cardsContainer.prepend(
-    getCardElement(cardNameInput.value, cardLinkInput.value)
-  )
+  const card = {
+    name: cardNameInput.value,
+    link: cardLinkInput.value
+  }
+  const newCardInstance = new Card(card, '#card-template')
+  const newCard = newCardInstance.generateCard()
+  cardsContainer.prepend(newCard)
   closeModal(newCardModal)
   document.addEventListener('keydown', newCardCloseKey)
 }
-
 
 function handleOpenNewCardModal() {
   openModal(newCardModal)
   document.addEventListener('keydown', newCardCloseKey)
 }
 
-
 function newCardCloseKey(e) {
   if (e.key === 'Escape') {
     closeModal(newCardModal)
-    
   }
 }
 
 function profileEditCloseKey(e) {
   if (e.key === 'Escape') {
     closeModal(profileEditModal)
-
   }
 }
-function imagePopupCloseKey(e) {
+/* function imagePopupCloseKey(e) {
   if (e.key === 'Escape') {
     closeModal(imagePopupModal)
-
   }
-}
-
+} */
 
 profileEditOpenBtn.addEventListener('click', handleOpenEditModal)
 
@@ -173,12 +168,14 @@ profileEditCloseBtn.addEventListener('click', function () {
 
 profileEditForm.addEventListener('submit', handleProfileFormSubmit)
 
-imagePopupCloseBtn.addEventListener('click', function () {
+/* imagePopupCloseBtn.addEventListener('click', function () {
   closeModal(imagePopupModal)
-})
+}) */
 
 initialCards.forEach(function (card) {
-  renderCard(card.name, card.link, cardsContainer)
+  const newCardInstance = new Card(card, '#card-template')
+  const newCard = newCardInstance.generateCard()
+  cardsContainer.prepend(newCard)
 })
 
 newCardOpenBtn.addEventListener('click', handleOpenNewCardModal)
@@ -206,12 +203,21 @@ newCardModal.addEventListener('click', e => {
   }
 })
 
-
-imagePopupModal.addEventListener('click', e => {
+/* imagePopupModal.addEventListener('click', e => {
   if (
     e.target.classList.contains('popup') ||
     e.target.classList.contains('popup__close')
   ) {
     closeModal(imagePopupModal)
   }
-})
+}) */
+
+export {
+  profileEditModal,
+  newCardModal,
+  imagePopup,
+  captionPopup,
+  imagePopupModal,
+  imagePopupCloseBtn,
+  submitButtonNewCardModal
+}

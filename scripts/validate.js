@@ -1,3 +1,4 @@
+import { profileEditModal, newCardModal, submitButtonNewCardModal } from './index.js'
 const inputsProfileEditModal =
   profileEditModal.querySelectorAll('.popup__input')
   
@@ -68,3 +69,4 @@ inputsNewCardModal.forEach(input => {
   })
 })
 
+export {resetFormValidation}
