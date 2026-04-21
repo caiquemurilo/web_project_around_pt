@@ -1,4 +1,6 @@
-import { Card } from './card.js'
+import Card from './card.js'
+import { FormValidator } from './formValidator.js'
+// import { FormValidator } from './formValidator.js'
 // import { resetFormValidation } from './validate.js'
 const initialCards = [
   {
@@ -65,12 +67,13 @@ function closeModal(modal) {
   const form = modal.querySelector('form')
   if (form) {
     modal.querySelector('form').reset()
-    resetFormValidation(modal)
   }
   if (modal === newCardModal) {
     document.removeEventListener('keydown', newCardCloseKey)
+    formValidatorNewCard.resetFormValidation()
   } else if (modal === profileEditModal) {
     document.removeEventListener('keydown', profileEditCloseKey)
+    formValidatorEditProfile.resetFormValidation()
   }
 }
 
@@ -89,41 +92,6 @@ function handleProfileFormSubmit(evt) {
   profileDescription.textContent = jobInput.value
   closeModal(profileEditModal)
 }
-
-/* function getCardElement(name, link) {
-  const cardTemplate = document
-    .querySelector('#card-template')
-    .content.querySelector('.card')
-  const cardElement = cardTemplate.cloneNode(true)
-  const cardTitle = cardElement.querySelector('.card__title')
-  const cardImage = cardElement.querySelector('.card__image') 
-  cardTitle.textContent = name 
-  cardImage.alt = name 
-  cardImage.src = link 
-
-  const likeBtn = cardElement.querySelector('.card__like-button') 
-  likeBtn.addEventListener('click', function (evt) {
-    evt.currentTarget.classList.toggle('card__like-button_is-active')
-  }) 
-
-  const deleteCardBtn = cardElement.querySelector('.card__delete-button')
-  deleteCardBtn.addEventListener('click', function (evt) {
-    evt.currentTarget.closest('.card').remove()
-  }) 
-
-  cardImage.addEventListener('click', function () {
-    imagePopup.src = link
-    imagePopup.alt = name
-    captionPopup.textContent = name
-    openModal(imagePopupModal)
-    document.addEventListener('keydown', imagePopupCloseKey)
-  })
-
-  return cardElement
-} */
-/* function renderCard(name, link, container) {
-  container.append(getCardElement(name, link))
-} */
 
 function handleNewCardFormSubmit(evt) {
   evt.preventDefault()
@@ -154,11 +122,6 @@ function profileEditCloseKey(e) {
     closeModal(profileEditModal)
   }
 }
-/* function imagePopupCloseKey(e) {
-  if (e.key === 'Escape') {
-    closeModal(imagePopupModal)
-  }
-} */
 
 profileEditOpenBtn.addEventListener('click', handleOpenEditModal)
 
@@ -167,10 +130,6 @@ profileEditCloseBtn.addEventListener('click', function () {
 })
 
 profileEditForm.addEventListener('submit', handleProfileFormSubmit)
-
-/* imagePopupCloseBtn.addEventListener('click', function () {
-  closeModal(imagePopupModal)
-}) */
 
 initialCards.forEach(function (card) {
   const newCardInstance = new Card(card, '#card-template')
@@ -203,14 +162,64 @@ newCardModal.addEventListener('click', e => {
   }
 })
 
-/* imagePopupModal.addEventListener('click', e => {
+function handleOpenImagePopup(name, link) {
+  imagePopup.src = link
+  imagePopup.alt = name
+  captionPopup.textContent = name
+  document.addEventListener('keydown', addImagePopupCloseKey)
+  imagePopupModal.addEventListener('click', addImagePopupCloseClick)
+  imagePopupCloseBtn.addEventListener('click', handleCloseImagePopup)
+  openModal(imagePopupModal)
+}
+
+function handleCloseImagePopup() {
+  closeModal(imagePopupModal)
+  imagePopup.src = ''
+  imagePopup.alt = ''
+  captionPopup.textContent = ''
+  document.removeEventListener('keydown', addImagePopupCloseKey)
+  imagePopupModal.removeEventListener('click', addImagePopupCloseClick)
+  imagePopupCloseBtn.removeEventListener('click', handleCloseImagePopup)
+}
+
+function addImagePopupCloseKey(e) {
+  if (e.key === 'Escape') {
+    handleCloseImagePopup()
+  }
+}
+function addImagePopupCloseClick(e) {
   if (
     e.target.classList.contains('popup') ||
     e.target.classList.contains('popup__close')
   ) {
-    closeModal(imagePopupModal)
+    handleCloseImagePopup()
   }
-}) */
+}
+
+const formValidatorEditProfile = new FormValidator(
+  {
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__button',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: '.popup__input-error_active'
+  },
+  profileEditForm
+)
+
+formValidatorEditProfile.enableValidation()
+
+
+const formValidatorNewCard = new FormValidator(
+  {
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__button',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: '.popup__input-error_active'
+  },
+  newCardForm
+)
+formValidatorNewCard.enableValidation()
+
 
 export {
   profileEditModal,
@@ -219,5 +228,6 @@ export {
   captionPopup,
   imagePopupModal,
   imagePopupCloseBtn,
-  submitButtonNewCardModal
+  submitButtonNewCardModal,
+  handleOpenImagePopup
 }
