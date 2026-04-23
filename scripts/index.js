@@ -201,7 +201,7 @@ const formValidatorEditProfile = new FormValidator(
     inputSelector: '.popup__input',
     submitButtonSelector: '.popup__button',
     inputErrorClass: 'popup__input_type_error',
-    errorClass: '.popup__input-error_active'
+    errorClass: 'popup__input-error_active'
   },
   profileEditForm
 )
@@ -214,7 +214,7 @@ const formValidatorNewCard = new FormValidator(
     inputSelector: '.popup__input',
     submitButtonSelector: '.popup__button',
     inputErrorClass: 'popup__input_type_error',
-    errorClass: '.popup__input-error_active'
+    errorClass: 'popup__input-error_active'
   },
   newCardForm
 )

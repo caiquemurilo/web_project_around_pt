@@ -6,7 +6,7 @@ export class FormValidator {
     this._inputSelector = inputSelector // '.popup__input'
     this._submitButtonSelector = submitButtonSelector // '.popup__button'
     this._inputErrorClass = inputErrorClass // 'popup__input_type_error'
-    this._errorClass = errorClass // '.popup__input-error_active'
+    this._errorClass = errorClass // 'popup__input-error_active'
 
     this._formElement = formElement // ex: o newCardModal de const newCardModal = document.querySelector('#new-card-popup')
   }
@@ -22,7 +22,7 @@ export class FormValidator {
   _setEventListeners() {
     this._formInputs.forEach(input => {
       input.addEventListener('input', () => {
-        if (this._hasInvalidInput()) {
+        if (!input.validity.valid) {
           this._showInputError(input, input.validationMessage)
         } else {
           this._hideInputError(input)
@@ -33,16 +33,16 @@ export class FormValidator {
   }
   _showInputError(element, errorMessage) {
     const errorElement = document.querySelector(`.${element.id}-input-error`) //select span with class which has the class with id reference in its name 
-    element.classList.add(this._inputErrorClass)
-    errorElement.textContent = errorMessage
-    errorElement.classList.add('popup__input-error_active')
+    element.classList.add(this._inputErrorClass) // ok, deixando borda input vermelha
+    errorElement.textContent = errorMessage //ok, jogando error message no span
+    errorElement.classList.add(this._errorClass) //ok, jogando display block no span de erro
 
   }
   _hideInputError(element) {
     const errorElement = document.querySelector(`.${element.id}-input-error`)
-    element.classList.remove('popup__input_type_error')
+    element.classList.remove(this._inputErrorClass)
     errorElement.textContent = ''
-    errorElement.classList.remove('popup__input-error_active')
+    errorElement.classList.remove(this._errorClass)
   }
   _hasInvalidInput() {
     return this._formInputs.some(function (input) {
