@@ -1,4 +1,4 @@
-import { handleOpenImagePopup } from './index.js'
+import { handleOpenImagePopup } from './utils.js'
 export default class Card {
   constructor({ name, link }, cardTemplateSelector) {
     this._name = name

@@ -8,7 +8,7 @@ export class FormValidator {
     this._inputErrorClass = inputErrorClass // 'popup__input_type_error'
     this._errorClass = errorClass // 'popup__input-error_active'
 
-    this._formElement = formElement // ex: o newCardModal de const newCardModal = document.querySelector('#new-card-popup')
+    this._formElement = formElement // ex: newCardModal - const newCardModal = document.querySelector('#new-card-popup')
   }
   enableValidation() {
     this._formInputs = Array.from(this._formElement.querySelectorAll(this._inputSelector))
@@ -33,9 +33,9 @@ export class FormValidator {
   }
   _showInputError(element, errorMessage) {
     const errorElement = document.querySelector(`.${element.id}-input-error`) //select span with class which has the class with id reference in its name 
-    element.classList.add(this._inputErrorClass) // ok, deixando borda input vermelha
-    errorElement.textContent = errorMessage //ok, jogando error message no span
-    errorElement.classList.add(this._errorClass) //ok, jogando display block no span de erro
+    element.classList.add(this._inputErrorClass) 
+    errorElement.textContent = errorMessage 
+    errorElement.classList.add(this._errorClass)
 
   }
   _hideInputError(element) {
