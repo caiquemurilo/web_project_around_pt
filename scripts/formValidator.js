@@ -11,7 +11,9 @@ export class FormValidator {
     this._formElement = formElement // ex: newCardModal - const newCardModal = document.querySelector('#new-card-popup')
   }
   enableValidation() {
-    this._formInputs = Array.from(this._formElement.querySelectorAll(this._inputSelector))
+    this._formInputs = Array.from(
+      this._formElement.querySelectorAll(this._inputSelector)
+    )
 
     this._submitButton = this._formElement.querySelector(
       this._submitButtonSelector
@@ -32,14 +34,17 @@ export class FormValidator {
     })
   }
   _showInputError(element, errorMessage) {
-    const errorElement = this._formElement.querySelector(`.${element.id}-input-error`) //select span with class which has the class with id reference in its name 
-    element.classList.add(this._inputErrorClass) 
-    errorElement.textContent = errorMessage 
+    const errorElement = this._formElement.querySelector(
+      `.${element.id}-input-error`
+    ) //select span with class which has the class with id reference in its name
+    element.classList.add(this._inputErrorClass)
+    errorElement.textContent = errorMessage
     errorElement.classList.add(this._errorClass)
-
   }
   _hideInputError(element) {
-    const errorElement = this._formElement.querySelector(`.${element.id}-input-error`)
+    const errorElement = this._formElement.querySelector(
+      `.${element.id}-input-error`
+    )
     element.classList.remove(this._inputErrorClass)
     errorElement.textContent = ''
     errorElement.classList.remove(this._errorClass)
@@ -48,7 +53,6 @@ export class FormValidator {
     return this._formInputs.some(function (input) {
       return !input.validity.valid
     })
-
   }
   _toggleButtonState() {
     if (this._hasInvalidInput()) {
@@ -61,5 +65,6 @@ export class FormValidator {
     this._formInputs.forEach(input => {
       this._hideInputError(input)
     })
+    this._toggleButtonState()
   }
 }
