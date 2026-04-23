@@ -32,14 +32,14 @@ export class FormValidator {
     })
   }
   _showInputError(element, errorMessage) {
-    const errorElement = document.querySelector(`.${element.id}-input-error`) //select span with class which has the class with id reference in its name 
+    const errorElement = this._formElement.querySelector(`.${element.id}-input-error`) //select span with class which has the class with id reference in its name 
     element.classList.add(this._inputErrorClass) 
     errorElement.textContent = errorMessage 
     errorElement.classList.add(this._errorClass)
 
   }
   _hideInputError(element) {
-    const errorElement = document.querySelector(`.${element.id}-input-error`)
+    const errorElement = this._formElement.querySelector(`.${element.id}-input-error`)
     element.classList.remove(this._inputErrorClass)
     errorElement.textContent = ''
     errorElement.classList.remove(this._errorClass)
