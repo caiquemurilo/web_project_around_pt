@@ -1,4 +1,4 @@
-import { handleOpenImagePopup } from './utils.js'
+import PopupWithImage from './PopupWithImage.js'
 export default class Card {
   constructor({ name, link }, cardTemplateSelector) {
     this._name = name
@@ -23,7 +23,8 @@ export default class Card {
       this._cardElement.remove()
     })
     this._cardImage.addEventListener('click', () => {
-      handleOpenImagePopup(this._name, this._link)
+      const popupImageInstace = new PopupWithImage('#image-popup')
+      popupImageInstace.open(this._name, this._link)
     })
   }
   generateCard() {

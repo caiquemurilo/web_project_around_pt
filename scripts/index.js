@@ -1,7 +1,6 @@
 // index.js
 import Card from './card.js'
 import { FormValidator } from './formValidator.js'
-import { openModal, closeModal, handleOverlayClick } from './utils.js'
 import Section from './Section.js'
 
 const initialCards = [
@@ -109,16 +108,6 @@ newCardOpenBtn.addEventListener('click', () => {
   openModal(newCardModal)
 })
 
-profileEditForm.addEventListener('submit', handleProfileFormSubmit)
-newCardForm.addEventListener('submit', handleNewCardFormSubmit)
-
-profileEditModal.addEventListener('click', handleOverlayClick)
-newCardModal.addEventListener('click', handleOverlayClick)
-
-const imagePopupModal = document.querySelector('#image-popup')
-if (imagePopupModal) {
-  imagePopupModal.addEventListener('click', handleOverlayClick)
-}
 
 
 const initialCardsList = new Section(
