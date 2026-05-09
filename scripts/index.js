@@ -2,6 +2,7 @@
 import Card from './card.js'
 import { FormValidator } from './formValidator.js'
 import Section from './Section.js'
+import PopupWithForm from './PopupWithForm.js'
 
 const initialCards = [
   {
@@ -67,19 +68,36 @@ formValidatorNewCard.enableValidation()
 function fillProfileForm() {
   nameInput.value = profileTitle.textContent
   jobInput.value = profileDescription.textContent
-}
+} // para o userinfo
 
-function handleProfileFormSubmit(evt) {
-  evt.preventDefault()
-  profileTitle.textContent = nameInput.value
+
+
+
+
+profileEditOpenBtn.addEventListener('click', () => {
+  fillProfileForm()
+
+  const popupFormInstance = new PopupWithForm(
+    '#edit-popup',
+    (evt) => {
+      evt.preventDefault()
+      profileTitle.textContent = nameInput.value
   profileDescription.textContent = jobInput.value
-  closeModal(profileEditModal)
-}
+  popupFormInstance.close()
+    },
+    () => formValidatorEditProfile.resetFormValidation()
+  )
+  popupFormInstance.open()
+})
 
-function handleNewCardFormSubmit(evt) {
-  evt.preventDefault()
+newCardOpenBtn.addEventListener('click', () => {
+
+
+  const popupFormInstance = new PopupWithForm(
+    '#new-card-popup',
+    (evt) => {
+      evt.preventDefault()
   const cardData = [{ name: cardNameInput.value, link: cardLinkInput.value }]
-
 
   const sectionNewCard = new Section(
     {
@@ -93,22 +111,12 @@ function handleNewCardFormSubmit(evt) {
     cardsContainerSelector
   )
   sectionNewCard.renderer()
-  closeModal(newCardModal)
-}
-
-profileEditOpenBtn.addEventListener('click', () => {
-  fillProfileForm()
-  formValidatorEditProfile.resetFormValidation()
-  openModal(profileEditModal)
+  popupFormInstance.close()
+    },
+    () => formValidatorNewCard.resetFormValidation()
+  )
+  popupFormInstance.open()
 })
-
-newCardOpenBtn.addEventListener('click', () => {
-  newCardForm.reset()
-  formValidatorNewCard.resetFormValidation()
-  openModal(newCardModal)
-})
-
-
 
 const initialCardsList = new Section(
   {

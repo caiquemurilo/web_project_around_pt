@@ -23,8 +23,8 @@ export default class Card {
       this._cardElement.remove()
     })
     this._cardImage.addEventListener('click', () => {
-      const popupImageInstace = new PopupWithImage('#image-popup')
-      popupImageInstace.open(this._name, this._link)
+      const popupImageInstance = new PopupWithImage('#image-popup')
+      popupImageInstance.open(this._name, this._link)
     })
   }
   generateCard() {

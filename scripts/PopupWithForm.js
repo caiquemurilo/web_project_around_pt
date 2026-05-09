@@ -1,21 +1,30 @@
 import Popup from './Popup.js'
-class PopupWithForm extends Popup {
-  constructor(popupSelector, handleFormSubit) {
+export default class PopupWithForm extends Popup {
+  constructor(popupSelector, handleFormSubit, resetFormValidation) {
     super(popupSelector)
-    this._handleFormSubit = handleFormSubit // callback function submit form
+    this._handleFormSubit = handleFormSubit.bind(this) // callback function submit form
+    this._popupForm = this._popupElement.querySelector('.popup__form')
+    this._resetFormValidation = resetFormValidation
   }
   _getInputValues() {
-    // coleta dados de todos os campos de entrada
+    const formValues = {}
+    const formInputList = Array.from(
+      this._popupElement.querySelectorAll('.popup__input')
+    )
+    formInputList.forEach(input => {
+      formValues[input.id] = input.value
+    })
+    return formValues
+
   }
   setEventListeners() {
-    super.setEventListeners();
-// adicionar o manipulador de eventos Submit ao formulário e o ouvinte de eventos click para o ícone de fechamento.
+    super.setEventListeners()
+    this._popupForm.addEventListener('submit', this._handleFormSubit)
   }
   close() {
+
     super.close()
-    // Modificar o método pai close() para redefinir o formulário assim que o pop-up for fechado.
+    this._resetFormValidation()
+    this._popupForm.removeEventListener('submit', this._handleFormSubit)
   }
-
 }
-
-// OBSSSSSS Criar uma instância da classe PopupWithForm para cada pop-up, provavelmente lá no index
