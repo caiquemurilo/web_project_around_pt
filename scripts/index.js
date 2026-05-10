@@ -72,50 +72,50 @@ function fillProfileForm() {
 
 
 
-
+const editPopupFormInstance = new PopupWithForm(
+  '#edit-popup',
+  (evt) => {
+    evt.preventDefault()
+    const { name, description} = editPopupFormInstance._getInputValues()
+    profileTitle.textContent = name
+profileDescription.textContent = description
+editPopupFormInstance.close()
+  },
+  () => formValidatorEditProfile.resetFormValidation()
+)
 
 profileEditOpenBtn.addEventListener('click', () => {
   fillProfileForm()
-
-  const popupFormInstance = new PopupWithForm(
-    '#edit-popup',
-    (evt) => {
-      evt.preventDefault()
-      profileTitle.textContent = nameInput.value
-  profileDescription.textContent = jobInput.value
-  popupFormInstance.close()
-    },
-    () => formValidatorEditProfile.resetFormValidation()
-  )
-  popupFormInstance.open()
+  editPopupFormInstance .open()
 })
 
+
+const newCardPopupFormInstance = new PopupWithForm(
+  '#new-card-popup',
+  (evt) => {
+    evt.preventDefault()
+    const { 'place-name': placeName, link} = newCardPopupFormInstance._getInputValues()
+const cardData = [{ name: placeName, link: link }]
+
+const sectionNewCard = new Section(
+  {
+    items: cardData,
+    renderer: item => {
+      const cardInstance = new Card(item, '#card-template')
+      const card = cardInstance.generateCard()
+      sectionNewCard.addItem(card)
+    }
+  },
+  cardsContainerSelector
+)
+sectionNewCard.renderer()
+newCardPopupFormInstance.close()
+  },
+  () => formValidatorNewCard.resetFormValidation()
+)
+
 newCardOpenBtn.addEventListener('click', () => {
-
-
-  const popupFormInstance = new PopupWithForm(
-    '#new-card-popup',
-    (evt) => {
-      evt.preventDefault()
-  const cardData = [{ name: cardNameInput.value, link: cardLinkInput.value }]
-
-  const sectionNewCard = new Section(
-    {
-      items: cardData,
-      renderer: item => {
-        const cardInstance = new Card(item, '#card-template')
-        const card = cardInstance.generateCard()
-        sectionNewCard.addItem(card)
-      }
-    },
-    cardsContainerSelector
-  )
-  sectionNewCard.renderer()
-  popupFormInstance.close()
-    },
-    () => formValidatorNewCard.resetFormValidation()
-  )
-  popupFormInstance.open()
+  newCardPopupFormInstance.open()
 })
 
 const initialCardsList = new Section(

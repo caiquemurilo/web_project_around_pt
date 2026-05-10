@@ -22,7 +22,7 @@ export default class PopupWithForm extends Popup {
     this._popupForm.addEventListener('submit', this._handleFormSubit)
   }
   close() {
-
+    console.log(this._getInputValues())
     super.close()
     this._resetFormValidation()
     this._popupForm.removeEventListener('submit', this._handleFormSubit)
