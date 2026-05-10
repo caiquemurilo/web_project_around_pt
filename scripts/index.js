@@ -3,6 +3,7 @@ import Card from './card.js'
 import { FormValidator } from './formValidator.js'
 import Section from './Section.js'
 import PopupWithForm from './PopupWithForm.js'
+import UserInfo from './UserInfo.js'
 
 const initialCards = [
   {
@@ -45,8 +46,6 @@ const profileEditOpenBtn = document.querySelector('.profile__edit-button')
 
 const newCardModal = document.querySelector('#new-card-popup')
 const newCardForm = newCardModal.querySelector('#new-card-form')
-const cardNameInput = newCardModal.querySelector('.popup__input_type_card-name')
-const cardLinkInput = newCardModal.querySelector('.popup__input_type_url')
 const newCardOpenBtn = document.querySelector('.profile__add-button')
 
 const validationConfig = {
@@ -65,10 +64,11 @@ formValidatorEditProfile.enableValidation()
 const formValidatorNewCard = new FormValidator(validationConfig, newCardForm)
 formValidatorNewCard.enableValidation()
 
-function fillProfileForm() {
-  nameInput.value = profileTitle.textContent
-  jobInput.value = profileDescription.textContent
-} // para o userinfo
+
+const userInfo = new UserInfo({
+  nameSelector: '.profile__title',
+  jobSelector: '.profile__description'
+})
 
 
 
@@ -79,14 +79,18 @@ const editPopupFormInstance = new PopupWithForm(
     const { name, description} = editPopupFormInstance._getInputValues()
     profileTitle.textContent = name
 profileDescription.textContent = description
+userInfo.setUserInfo({ name, description })
 editPopupFormInstance.close()
   },
   () => formValidatorEditProfile.resetFormValidation()
 )
 
 profileEditOpenBtn.addEventListener('click', () => {
-  fillProfileForm()
+  const currentUserInfo = userInfo.getUserInfo()
+  nameInput.value = currentUserInfo.name
+  jobInput.value = currentUserInfo.description
   editPopupFormInstance .open()
+  
 })
 
 
