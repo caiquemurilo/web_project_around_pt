@@ -93,26 +93,30 @@ profileEditOpenBtn.addEventListener('click', () => {
   
 })
 
+const cardSectionInstance = new Section(
+  {
+    items: initialCards,
+    renderer: item => {
+      const cardInstance = new Card(item, '#card-template')
+      const card = cardInstance.generateCard()
+      cardSectionInstance.addItem(card)
+    }
+  },
+  cardsContainerSelector
+)
+
+
 
 const newCardPopupFormInstance = new PopupWithForm(
   '#new-card-popup',
   (evt) => {
     evt.preventDefault()
     const { 'place-name': placeName, link} = newCardPopupFormInstance._getInputValues()
-const cardData = [{ name: placeName, link: link }]
 
-const sectionNewCard = new Section(
-  {
-    items: cardData,
-    renderer: item => {
-      const cardInstance = new Card(item, '#card-template')
-      const card = cardInstance.generateCard()
-      sectionNewCard.addItem(card)
-    }
-  },
-  cardsContainerSelector
-)
-sectionNewCard.renderer()
+      const cardInstance = new Card({name: placeName, link: link}, '#card-template')
+      const cardElement = cardInstance.generateCard()
+      cardSectionInstance.addItem(cardElement)
+
 newCardPopupFormInstance.close()
   },
   () => formValidatorNewCard.resetFormValidation()
@@ -122,15 +126,4 @@ newCardOpenBtn.addEventListener('click', () => {
   newCardPopupFormInstance.open()
 })
 
-const initialCardsList = new Section(
-  {
-    items: initialCards,
-    renderer: item => {
-      const cardInstance = new Card(item, '#card-template')
-      const card = cardInstance.generateCard()
-      initialCardsList.addItem(card)
-    }
-  },
-  cardsContainerSelector
-)
-initialCardsList.renderer()
+cardSectionInstance.renderer()
