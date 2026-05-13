@@ -1,9 +1,10 @@
-import Card from './Card.js'
-import { FormValidator } from './FormValidator.js'
-import Section from './Section.js'
-import PopupWithForm from './PopupWithForm.js'
-import UserInfo from './UserInfo.js'
-import PopupWithImage from './PopupWithImage.js'
+import Card from '../components/Card.js'
+import { FormValidator } from '../components/FormValidator.js'
+import Section from '../components/Section.js'
+import PopupWithForm from '../components/PopupWithForm.js'
+import UserInfo from '../components/UserInfo.js'
+import PopupWithImage from '../components/PopupWithImage.js'
+
 
 const initialCards = [
   {
@@ -64,21 +65,18 @@ formValidatorEditProfile.enableValidation()
 const formValidatorNewCard = new FormValidator(validationConfig, newCardForm)
 formValidatorNewCard.enableValidation()
 
-
 const userInfo = new UserInfo({
   nameSelector: '.profile__title',
   jobSelector: '.profile__description'
 })
 
-
-
 const editPopupFormInstance = new PopupWithForm(
   '#edit-popup',
-  (evt) => {
+  evt => {
     evt.preventDefault()
-    const { name, description} = editPopupFormInstance._getInputValues()
-userInfo.setUserInfo({ name, description })
-editPopupFormInstance.close()
+    const { name, description } = editPopupFormInstance._getInputValues()
+    userInfo.setUserInfo({ name, description })
+    editPopupFormInstance.close()
   },
   () => formValidatorEditProfile.resetFormValidation()
 )
@@ -87,8 +85,7 @@ profileEditOpenBtn.addEventListener('click', () => {
   const currentUserInfo = userInfo.getUserInfo()
   nameInput.value = currentUserInfo.name
   jobInput.value = currentUserInfo.description
-  editPopupFormInstance .open()
-  
+  editPopupFormInstance.open()
 })
 const popupImageInstance = new PopupWithImage('#image-popup')
 
@@ -97,8 +94,7 @@ const cardSectionInstance = new Section(
     items: initialCards,
     renderer: item => {
       const cardInstance = new Card(item, '#card-template', () => {
-      
-      popupImageInstance.open(item.name, item.link)
+        popupImageInstance.open(item.name, item.link)
       })
       const card = cardInstance.generateCard()
       cardSectionInstance.addItem(card)
@@ -107,22 +103,24 @@ const cardSectionInstance = new Section(
   cardsContainerSelector
 )
 
-
-
 const newCardPopupFormInstance = new PopupWithForm(
   '#new-card-popup',
-  (evt) => {
+  evt => {
     evt.preventDefault()
-    const { 'place-name': placeName, link} = newCardPopupFormInstance._getInputValues()
+    const { 'place-name': placeName, link } =
+      newCardPopupFormInstance._getInputValues()
 
-      const cardInstance = new Card({name: placeName, link: link}, '#card-template', () => {
-      
+    const cardInstance = new Card(
+      { name: placeName, link: link },
+      '#card-template',
+      () => {
         popupImageInstance.open(placeName, link)
-        })
-      const cardElement = cardInstance.generateCard()
-      cardSectionInstance.addItem(cardElement)
+      }
+    )
+    const cardElement = cardInstance.generateCard()
+    cardSectionInstance.addItem(cardElement)
 
-newCardPopupFormInstance.close()
+    newCardPopupFormInstance.close()
   },
   () => formValidatorNewCard.resetFormValidation()
 )
