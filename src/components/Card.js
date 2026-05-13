@@ -1,9 +1,10 @@
-import PopupWithImage from './PopupWithImage.js'
+
 export default class Card {
-  constructor({ name, link }, cardTemplateSelector) {
+  constructor({ name, link }, cardTemplateSelector, handleCardClick) {
     this._name = name
     this._link = link
     this._cardTemplateSelector = cardTemplateSelector
+    this._handleCardClick = handleCardClick
 
   }
   _getTemplate() {
@@ -22,10 +23,8 @@ export default class Card {
     this.removeCardBtn.addEventListener('click', () => {
       this._cardElement.remove()
     })
-    this._cardImage.addEventListener('click', () => {
-      const popupImageInstance = new PopupWithImage('#image-popup')
-      popupImageInstance.open(this._name, this._link)
-    })
+
+    this._cardImage.addEventListener('click', this._handleCardClick)
   }
   generateCard() {
     this._cardElement = this._getTemplate()

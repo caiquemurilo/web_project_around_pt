@@ -1,9 +1,9 @@
-// index.js
 import Card from './Card.js'
 import { FormValidator } from './FormValidator.js'
 import Section from './Section.js'
 import PopupWithForm from './PopupWithForm.js'
 import UserInfo from './UserInfo.js'
+import PopupWithImage from './PopupWithImage.js'
 
 const initialCards = [
   {
@@ -92,12 +92,16 @@ profileEditOpenBtn.addEventListener('click', () => {
   editPopupFormInstance .open()
   
 })
+const popupImageInstance = new PopupWithImage('#image-popup')
 
 const cardSectionInstance = new Section(
   {
     items: initialCards,
     renderer: item => {
-      const cardInstance = new Card(item, '#card-template')
+      const cardInstance = new Card(item, '#card-template', () => {
+      
+      popupImageInstance.open(item.name, item.link)
+      })
       const card = cardInstance.generateCard()
       cardSectionInstance.addItem(card)
     }
@@ -113,7 +117,10 @@ const newCardPopupFormInstance = new PopupWithForm(
     evt.preventDefault()
     const { 'place-name': placeName, link} = newCardPopupFormInstance._getInputValues()
 
-      const cardInstance = new Card({name: placeName, link: link}, '#card-template')
+      const cardInstance = new Card({name: placeName, link: link}, '#card-template', () => {
+      
+        popupImageInstance.open(placeName, link)
+        })
       const cardElement = cardInstance.generateCard()
       cardSectionInstance.addItem(cardElement)
 
