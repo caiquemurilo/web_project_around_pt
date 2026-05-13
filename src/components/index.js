@@ -40,8 +40,8 @@ const nameInput = profileEditModal.querySelector('.popup__input_type_name')
 const jobInput = profileEditModal.querySelector(
   '.popup__input_type_description'
 )
-const profileTitle = document.querySelector('.profile__title')
-const profileDescription = document.querySelector('.profile__description')
+/* const profileTitle = document.querySelector('.profile__title')
+const profileDescription = document.querySelector('.profile__description') */
 const profileEditOpenBtn = document.querySelector('.profile__edit-button')
 
 const newCardModal = document.querySelector('#new-card-popup')
@@ -77,8 +77,6 @@ const editPopupFormInstance = new PopupWithForm(
   (evt) => {
     evt.preventDefault()
     const { name, description} = editPopupFormInstance._getInputValues()
-    profileTitle.textContent = name
-profileDescription.textContent = description
 userInfo.setUserInfo({ name, description })
 editPopupFormInstance.close()
   },
