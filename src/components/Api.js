@@ -4,21 +4,15 @@ export default class Api {
     this._headers = headers
   }
 
-  _handleResponse(res) {
-    if (res.ok) {
-      return res.json()
-    }
-    return Promise.reject(`Error: ${res.status}`)
-  }
-
-  _handleServerResponse(res) {
+  _checkResponse(res) {
     return res.ok ? res.json() : Promise.reject(`Error: ${res.status}`);
   }
+
 
   getUser() {
     return fetch(`${this._baseUrl}/users/me`, {
       headers: this._headers
-    }).then(this._handleResponse)
+    }).then(this._checkResponse)
   }
 
   setUserInfo({ name, about }) {
@@ -29,13 +23,13 @@ export default class Api {
         name,
         about
       })
-    }).then(this._handleServerResponse)
+    }).then(this._checkResponse)
   }
 
   getInitialCards() {
     return fetch(`${this._baseUrl}/cards`, {
       headers: this._headers
-    }).then(this._handleResponse)
+    }).then(this._checkResponse)
   }
 
   getInitialData() {
