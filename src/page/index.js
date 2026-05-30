@@ -142,17 +142,22 @@ const newCardPopupFormInstance = new PopupWithForm(
     const { 'place-name': placeName, link } =
       newCardPopupFormInstance._getInputValues()
 
-    const cardInstance = new Card(
-      { name: placeName, link: link },
-      '#card-template',
-      () => {
-        popupImageInstance.open(placeName, link)
-      }
-    )
-    const cardElement = cardInstance.generateCard()
-    cardSectionInstance.addItem(cardElement)
+    api
+      .createCard({ name: placeName, link })
+      .then(newCardData => {
+        // A API respondeu com sucesso. Agora usamos o objeto oficial dela (newCardData)
+        const cardInstance = new Card(newCardData, '#card-template', () => {
+          popupImageInstance.open(newCardData.name, newCardData.link)
+        })
+        const cardElement = cardInstance.generateCard()
+        cardSectionInstance.addItem(cardElement)
 
-    newCardPopupFormInstance.close()
+        // Só fechamos o modal se o card foi efetivamente salvo no banco
+        newCardPopupFormInstance.close()
+      })
+      .catch(err => {
+        console.log(`Erro ao criar cartão: ${err}`)
+      })
   },
   () => formValidatorNewCard.resetFormValidation()
 )

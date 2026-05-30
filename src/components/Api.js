@@ -4,10 +4,9 @@ export default class Api {
     this._headers = headers
   }
 
-  _checkResponse(res) {
-    return res.ok ? res.json() : Promise.reject(`Error: ${res.status}`);
+  getInitialData() {
+    return Promise.all([this.getUser(), this.getInitialCards()])
   }
-
 
   getUser() {
     return fetch(`${this._baseUrl}/users/me`, {
@@ -32,9 +31,19 @@ export default class Api {
     }).then(this._checkResponse)
   }
 
-  getInitialData() {
-    return Promise.all([this.getUser(), this.getInitialCards()])
+createCard({name, link}) {
+return fetch(`${this._baseUrl}/cards/`, {
+  method: 'POST',
+  headers: this._headers,
+  body: JSON.stringify({
+    name,
+    link
+  })
+}).then(this._checkResponse)
+}
+
+  _checkResponse(res) {
+    return res.ok ? res.json() : Promise.reject(`Error: ${res.status}`);
   }
 
-  // outros métodos para trabalhar com a API
 }
