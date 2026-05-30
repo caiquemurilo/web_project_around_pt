@@ -1,3 +1,4 @@
+import Api from '../components/Api.js'
 import Card from '../components/Card.js'
 import { FormValidator } from '../components/FormValidator.js'
 import Section from '../components/Section.js'
@@ -5,33 +6,45 @@ import PopupWithForm from '../components/PopupWithForm.js'
 import UserInfo from '../components/UserInfo.js'
 import PopupWithImage from '../components/PopupWithImage.js'
 
-
-const initialCards = [
-  {
-    name: 'Vale de Yosemite',
-    link: 'https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_yosemite.jpg'
-  },
-  {
-    name: 'Lago Louise',
-    link: 'https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_lake-louise.jpg'
-  },
-  {
-    name: 'Montanhas Carecas',
-    link: 'https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_bald-mountains.jpg'
-  },
-  {
-    name: 'Latemar',
-    link: 'https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_latemar.jpg'
-  },
-  {
-    name: 'Parque Nacional da Vanoise',
-    link: 'https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_vanoise.jpg'
-  },
-  {
-    name: 'Lago di Braies',
-    link: 'https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_lago.jpg'
+const api = new Api({
+  baseUrl: 'https://around-api.pt-br.tripleten-services.com/v1',
+  headers: {
+    authorization: 'bc827ff1-488a-414b-a998-e3daaf72ac0b',
+    'Content-Type': 'application/json'
   }
-]
+})
+/*    {
+    "name": "Jacques Cousteau",
+    "about": "Explorador",
+    "avatar": "https://practicum-content.s3.us-west-1.amazonaws.com/frontend-developer/common/avatar.jpg",
+    "_id": "bd22d2324d371a4a45b9dc66"
+}  */
+
+/* api.getInitialData()
+.then(([userData, initialCards])=> {
+
+  initialCards.forEach(card => {
+    console.log(card)
+  })
+// saída userData this.getUser() 
+// userData.name
+// userData.about
+// passar essas chaves de userData para o método correto que renderiza esses dados no DOM
+// saída initialCards this.getInitialCards()
+})
+.catch(err => {
+
+})
+ */
+
+let userData = null
+let initialCards = []
+
+try {
+  ;[userData, initialCards] = await api.getInitialData()
+} catch (err) {
+  console.error(`Erro ao carregar dados da API: ${err}`)
+}
 
 const cardsContainerSelector = '.cards__list'
 
@@ -69,6 +82,13 @@ const userInfo = new UserInfo({
   nameSelector: '.profile__title',
   jobSelector: '.profile__description'
 })
+
+if (userData) {
+  userInfo.setUserInfo({
+    name: userData.name,
+    description: userData.about
+  })
+}
 
 const editPopupFormInstance = new PopupWithForm(
   '#edit-popup',
