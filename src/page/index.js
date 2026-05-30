@@ -95,8 +95,20 @@ const editPopupFormInstance = new PopupWithForm(
   evt => {
     evt.preventDefault()
     const { name, description } = editPopupFormInstance._getInputValues()
-    userInfo.setUserInfo({ name, description })
-    editPopupFormInstance.close()
+    /*     userInfo.setUserInfo({ name, description })
+    editPopupFormInstance.close() */
+    api
+      .setUserInfo({ name, about: description })
+      .then(updatedUserData => {
+        userInfo.setUserInfo({
+          name: updatedUserData.name,
+          description: updatedUserData.about
+        })
+        editPopupFormInstance.close()
+      })
+      .catch(err => {
+        console.log(`Erro ao atualizar o perfil: ${err}`)
+      })
   },
   () => formValidatorEditProfile.resetFormValidation()
 )
