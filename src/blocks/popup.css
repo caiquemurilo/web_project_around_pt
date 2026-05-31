@@ -40,6 +40,10 @@
   padding: 34px 36px;
 }
 
+.popup__content_content_confirmation {
+  min-height: auto;
+}
+
 .popup__form {
   margin-top: 27px;
 }

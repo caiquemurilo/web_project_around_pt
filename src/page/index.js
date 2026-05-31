@@ -2,8 +2,9 @@ import Api from '../components/Api.js'
 import Card from '../components/Card.js'
 import { FormValidator } from '../components/FormValidator.js'
 import Section from '../components/Section.js'
-import PopupWithForm from '../components/PopupWithForm.js'
 import UserInfo from '../components/UserInfo.js'
+import PopupWithConfirmation from '../components/PopupWithConfirmation.js'
+import PopupWithForm from '../components/PopupWithForm.js'
 import PopupWithImage from '../components/PopupWithImage.js'
 
 const api = new Api({
@@ -13,29 +14,6 @@ const api = new Api({
     'Content-Type': 'application/json'
   }
 })
-/*    {
-    "name": "Jacques Cousteau",
-    "about": "Explorador",
-    "avatar": "https://practicum-content.s3.us-west-1.amazonaws.com/frontend-developer/common/avatar.jpg",
-    "_id": "bd22d2324d371a4a45b9dc66"
-}  */
-
-/* api.getInitialData()
-.then(([userData, initialCards])=> {
-
-  initialCards.forEach(card => {
-    console.log(card)
-  })
-// saída userData this.getUser() 
-// userData.name
-// userData.about
-// passar essas chaves de userData para o método correto que renderiza esses dados no DOM
-// saída initialCards this.getInitialCards()
-})
-.catch(err => {
-
-})
- */
 
 let userData = null
 let initialCards = []
@@ -120,6 +98,8 @@ profileEditOpenBtn.addEventListener('click', () => {
   editPopupFormInstance.open()
 })
 const popupImageInstance = new PopupWithImage('#image-popup')
+const deleteCardPopupInstance = new PopupWithConfirmation('#delete-card-popup')
+deleteCardPopupInstance.setEventListeners()
 
 const cardSectionInstance = new Section(
   {
@@ -127,6 +107,9 @@ const cardSectionInstance = new Section(
     renderer: item => {
       const cardInstance = new Card(item, '#card-template', () => {
         popupImageInstance.open(item.name, item.link)
+      },
+      () => {
+        deleteCardPopupInstance.open()
       })
       const card = cardInstance.generateCard()
       cardSectionInstance.addItem(card)
@@ -145,14 +128,15 @@ const newCardPopupFormInstance = new PopupWithForm(
     api
       .createCard({ name: placeName, link })
       .then(newCardData => {
-        // A API respondeu com sucesso. Agora usamos o objeto oficial dela (newCardData)
         const cardInstance = new Card(newCardData, '#card-template', () => {
           popupImageInstance.open(newCardData.name, newCardData.link)
+        },
+        () => {
+          deleteCardPopupInstance.open()
         })
         const cardElement = cardInstance.generateCard()
         cardSectionInstance.addItem(cardElement)
 
-        // Só fechamos o modal se o card foi efetivamente salvo no banco
         newCardPopupFormInstance.close()
       })
       .catch(err => {

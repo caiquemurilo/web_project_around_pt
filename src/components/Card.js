@@ -1,11 +1,15 @@
-
 export default class Card {
-  constructor({ name, link }, cardTemplateSelector, handleCardClick) {
+  constructor(
+    { name, link },
+    cardTemplateSelector,
+    handleCardClick,
+    handleTrashClick
+  ) {
     this._name = name
     this._link = link
     this._cardTemplateSelector = cardTemplateSelector
     this._handleCardClick = handleCardClick
-
+    this._handleTrashClick = handleTrashClick
   }
   _getTemplate() {
     const cardTemplate = document
@@ -21,7 +25,8 @@ export default class Card {
     })
 
     this.removeCardBtn.addEventListener('click', () => {
-      this._cardElement.remove()
+      // this._cardElement.remove()
+      this._handleTrashClick()
     })
 
     this._cardImage.addEventListener('click', this._handleCardClick)
