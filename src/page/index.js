@@ -109,6 +109,14 @@ const cardSectionInstance = new Section(
         popupImageInstance.open(item.name, item.link)
       },
       () => {
+        deleteCardPopupInstance.setSubmitAction(() => {
+          api.deleteCard(item)
+          .then(() => {
+            cardInstance.removeCard()
+            deleteCardPopupInstance.close()
+          })
+          .catch(err => console.log(`Erro ao deletar o cartão: ${err}`))
+        })
         deleteCardPopupInstance.open()
       })
       const card = cardInstance.generateCard()
@@ -132,6 +140,14 @@ const newCardPopupFormInstance = new PopupWithForm(
           popupImageInstance.open(newCardData.name, newCardData.link)
         },
         () => {
+          deleteCardPopupInstance.setSubmitAction(() => {
+            api.deleteCard(newCardData)
+            .then(() => {
+              cardInstance.removeCard()
+              deleteCardPopupInstance.close()
+            })
+            .catch(err => console.log(`Erro ao deletar o cartão: ${err}`))
+          })
           deleteCardPopupInstance.open()
         })
         const cardElement = cardInstance.generateCard()

@@ -42,8 +42,14 @@ return fetch(`${this._baseUrl}/cards/`, {
 }).then(this._checkResponse)
 }
 
+deleteCard({_id}) {
+  return fetch(`${this._baseUrl}/cards/${_id}`, {
+    method: 'DELETE',
+    headers: this._headers
+  }).then(this._checkResponse)
+}
+
   _checkResponse(res) {
     return res.ok ? res.json() : Promise.reject(`Error: ${res.status}`);
   }
-
 }

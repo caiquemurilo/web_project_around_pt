@@ -46,4 +46,9 @@ export default class Card {
     this._setEventListeners()
     return this._cardElement
   }
+
+  removeCard() {
+    this._cardElement.remove()
+    this._cardElement = null
+  }
 }
