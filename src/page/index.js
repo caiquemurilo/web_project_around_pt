@@ -105,20 +105,39 @@ const cardSectionInstance = new Section(
   {
     items: initialCards,
     renderer: item => {
-      const cardInstance = new Card(item, '#card-template', () => {
-        popupImageInstance.open(item.name, item.link)
-      },
-      () => {
-        deleteCardPopupInstance.setSubmitAction(() => {
-          api.deleteCard(item)
-          .then(() => {
-            cardInstance.removeCard()
-            deleteCardPopupInstance.close()
+      const cardInstance = new Card(
+        item, 
+        '#card-template', 
+        () => {
+          popupImageInstance.open(item.name, item.link)
+        },
+        () => {
+          deleteCardPopupInstance.setSubmitAction(() => {
+            api.deleteCard(item)
+            .then(() => {
+              cardInstance.removeCard()
+              deleteCardPopupInstance.close()
+            })
+            .catch(err => console.log(`Erro ao deletar o cartão: ${err}`))
           })
-          .catch(err => console.log(`Erro ao deletar o cartão: ${err}`))
-        })
-        deleteCardPopupInstance.open()
-      })
+          deleteCardPopupInstance.open()
+        },
+        () => {
+          if (cardInstance.isLiked()) {
+            api.removeLike(item)
+              .then((updatedCard) => {
+                cardInstance.updateLikeState(updatedCard.isLiked)
+              })
+              .catch(err => console.log(`Erro ao remover curtida: ${err}`))
+          } else {
+            api.addLike(item)
+              .then((updatedCard) => {
+                cardInstance.updateLikeState(updatedCard.isLiked)
+              })
+              .catch(err => console.log(`Erro ao adicionar curtida: ${err}`))
+          }
+        }
+      )
       const card = cardInstance.generateCard()
       cardSectionInstance.addItem(card)
     }
@@ -130,26 +149,44 @@ const newCardPopupFormInstance = new PopupWithForm(
   '#new-card-popup',
   evt => {
     evt.preventDefault()
-    const { 'place-name': placeName, link } =
-      newCardPopupFormInstance._getInputValues()
+    const { 'place-name': placeName, link } = newCardPopupFormInstance._getInputValues()
 
-    api
-      .createCard({ name: placeName, link })
+    api.createCard({ name: placeName, link })
       .then(newCardData => {
-        const cardInstance = new Card(newCardData, '#card-template', () => {
-          popupImageInstance.open(newCardData.name, newCardData.link)
-        },
-        () => {
-          deleteCardPopupInstance.setSubmitAction(() => {
-            api.deleteCard(newCardData)
-            .then(() => {
-              cardInstance.removeCard()
-              deleteCardPopupInstance.close()
+        const cardInstance = new Card(
+          newCardData, 
+          '#card-template', 
+          () => {
+            popupImageInstance.open(newCardData.name, newCardData.link)
+          },
+          () => {
+            deleteCardPopupInstance.setSubmitAction(() => {
+              api.deleteCard(newCardData)
+              .then(() => {
+                cardInstance.removeCard()
+                deleteCardPopupInstance.close()
+              })
+              .catch(err => console.log(`Erro ao deletar o cartão: ${err}`))
             })
-            .catch(err => console.log(`Erro ao deletar o cartão: ${err}`))
-          })
-          deleteCardPopupInstance.open()
-        })
+            deleteCardPopupInstance.open()
+          },
+      
+          () => {
+            if (cardInstance.isLiked()) {
+              api.removeLike(newCardData)
+                .then((updatedCard) => {
+                  cardInstance.updateLikeState(updatedCard.isLiked)
+                })
+                .catch(err => console.log(`Erro ao remover curtida: ${err}`))
+            } else {
+              api.addLike(newCardData)
+                .then((updatedCard) => {
+                  cardInstance.updateLikeState(updatedCard.isLiked)
+                })
+                .catch(err => console.log(`Erro ao adicionar curtida: ${err}`))
+            }
+          }
+        )
         const cardElement = cardInstance.generateCard()
         cardSectionInstance.addItem(cardElement)
 
