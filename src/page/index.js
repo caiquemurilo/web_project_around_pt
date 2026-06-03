@@ -7,6 +7,9 @@ import PopupWithConfirmation from '../components/PopupWithConfirmation.js'
 import PopupWithForm from '../components/PopupWithForm.js'
 import PopupWithImage from '../components/PopupWithImage.js'
 
+const profileAvatarContainer = document.querySelector('.profile__avatar')
+const profileAvatarImage = document.querySelector('.profile__image')
+
 const api = new Api({
   baseUrl: 'https://around-api.pt-br.tripleten-services.com/v1',
   headers: {
@@ -32,8 +35,7 @@ const nameInput = profileEditModal.querySelector('.popup__input_type_name')
 const jobInput = profileEditModal.querySelector(
   '.popup__input_type_description'
 )
-/* const profileTitle = document.querySelector('.profile__title')
-const profileDescription = document.querySelector('.profile__description') */
+
 const profileEditOpenBtn = document.querySelector('.profile__edit-button')
 
 const newCardModal = document.querySelector('#new-card-popup')
@@ -56,6 +58,12 @@ formValidatorEditProfile.enableValidation()
 const formValidatorNewCard = new FormValidator(validationConfig, newCardForm)
 formValidatorNewCard.enableValidation()
 
+const avatarFormValidator = new FormValidator(
+  validationConfig,
+  document.querySelector('#set-avatar-form')
+)
+avatarFormValidator.enableValidation()
+
 const userInfo = new UserInfo({
   nameSelector: '.profile__title',
   jobSelector: '.profile__description'
@@ -66,6 +74,7 @@ if (userData) {
     name: userData.name,
     description: userData.about
   })
+  profileAvatarImage.src = userData.avatar
 }
 
 const editPopupFormInstance = new PopupWithForm(
@@ -73,8 +82,6 @@ const editPopupFormInstance = new PopupWithForm(
   evt => {
     evt.preventDefault()
     const { name, description } = editPopupFormInstance._getInputValues()
-    /*     userInfo.setUserInfo({ name, description })
-    editPopupFormInstance.close() */
     api
       .setUserInfo({ name, about: description })
       .then(updatedUserData => {
@@ -106,32 +113,35 @@ const cardSectionInstance = new Section(
     items: initialCards,
     renderer: item => {
       const cardInstance = new Card(
-        item, 
-        '#card-template', 
+        item,
+        '#card-template',
         () => {
           popupImageInstance.open(item.name, item.link)
         },
         () => {
           deleteCardPopupInstance.setSubmitAction(() => {
-            api.deleteCard(item)
-            .then(() => {
-              cardInstance.removeCard()
-              deleteCardPopupInstance.close()
-            })
-            .catch(err => console.log(`Erro ao deletar o cartão: ${err}`))
+            api
+              .deleteCard(item)
+              .then(() => {
+                cardInstance.removeCard()
+                deleteCardPopupInstance.close()
+              })
+              .catch(err => console.log(`Erro ao deletar o cartão: ${err}`))
           })
           deleteCardPopupInstance.open()
         },
         () => {
           if (cardInstance.isLiked()) {
-            api.removeLike(item)
-              .then((updatedCard) => {
+            api
+              .removeLike(item)
+              .then(updatedCard => {
                 cardInstance.updateLikeState(updatedCard.isLiked)
               })
               .catch(err => console.log(`Erro ao remover curtida: ${err}`))
           } else {
-            api.addLike(item)
-              .then((updatedCard) => {
+            api
+              .addLike(item)
+              .then(updatedCard => {
                 cardInstance.updateLikeState(updatedCard.isLiked)
               })
               .catch(err => console.log(`Erro ao adicionar curtida: ${err}`))
@@ -149,38 +159,43 @@ const newCardPopupFormInstance = new PopupWithForm(
   '#new-card-popup',
   evt => {
     evt.preventDefault()
-    const { 'place-name': placeName, link } = newCardPopupFormInstance._getInputValues()
+    const { 'place-name': placeName, link } =
+      newCardPopupFormInstance._getInputValues()
 
-    api.createCard({ name: placeName, link })
+    api
+      .createCard({ name: placeName, link })
       .then(newCardData => {
         const cardInstance = new Card(
-          newCardData, 
-          '#card-template', 
+          newCardData,
+          '#card-template',
           () => {
             popupImageInstance.open(newCardData.name, newCardData.link)
           },
           () => {
             deleteCardPopupInstance.setSubmitAction(() => {
-              api.deleteCard(newCardData)
-              .then(() => {
-                cardInstance.removeCard()
-                deleteCardPopupInstance.close()
-              })
-              .catch(err => console.log(`Erro ao deletar o cartão: ${err}`))
+              api
+                .deleteCard(newCardData)
+                .then(() => {
+                  cardInstance.removeCard()
+                  deleteCardPopupInstance.close()
+                })
+                .catch(err => console.log(`Erro ao deletar o cartão: ${err}`))
             })
             deleteCardPopupInstance.open()
           },
-      
+
           () => {
             if (cardInstance.isLiked()) {
-              api.removeLike(newCardData)
-                .then((updatedCard) => {
+              api
+                .removeLike(newCardData)
+                .then(updatedCard => {
                   cardInstance.updateLikeState(updatedCard.isLiked)
                 })
                 .catch(err => console.log(`Erro ao remover curtida: ${err}`))
             } else {
-              api.addLike(newCardData)
-                .then((updatedCard) => {
+              api
+                .addLike(newCardData)
+                .then(updatedCard => {
                   cardInstance.updateLikeState(updatedCard.isLiked)
                 })
                 .catch(err => console.log(`Erro ao adicionar curtida: ${err}`))
@@ -199,8 +214,32 @@ const newCardPopupFormInstance = new PopupWithForm(
   () => formValidatorNewCard.resetFormValidation()
 )
 
+const setAvatarPopupFormInstance = new PopupWithForm(
+  '#set-avatar-popup',
+  evt => {
+    evt.preventDefault()
+    const { avatar } = setAvatarPopupFormInstance._getInputValues()
+
+    api
+      .setUserAvatar({ avatar })
+      .then(updatedUserData => {
+        profileAvatarImage.src = updatedUserData.avatar
+        setAvatarPopupFormInstance.close()
+      })
+      .catch(err => {
+        console.log(`Erro ao atualizar a foto de perfil: ${err}`)
+      })
+  },
+
+  () => avatarFormValidator.resetFormValidation() 
+)
+setAvatarPopupFormInstance.setEventListeners()
+
 newCardOpenBtn.addEventListener('click', () => {
   newCardPopupFormInstance.open()
 })
 
+profileAvatarContainer.addEventListener('click', () => {
+  setAvatarPopupFormInstance.open()
+})
 cardSectionInstance.renderer()

@@ -24,6 +24,15 @@ export default class Api {
       })
     }).then(this._checkResponse)
   }
+  setUserAvatar({ avatar }) {
+    return fetch(`${this._baseUrl}/users/me/avatar`, {
+      method: 'PATCH',
+      headers: this._headers,
+      body: JSON.stringify({
+        avatar
+      })
+    }).then(this._checkResponse)
+  }
 
   getInitialCards() {
     return fetch(`${this._baseUrl}/cards`, {

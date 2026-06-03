@@ -18,7 +18,16 @@
       </header>
       <main class="content">
         <section class="profile page__section">
-          <img class="profile__image" src="./images/avatar.jpg" alt="Avatar" />
+          <div class="profile__avatar">
+            <img
+              class="profile__image"
+              src=""
+              alt="Avatar"
+            />
+            <div class="profile__overlay">
+              <img src="./images/edit-icon.svg" alt="Edit Icon" class="profile__overlay-icon">
+            </div>
+          </div>
           <div class="profile__info">
             <h1 class="profile__title"></h1>
             <button
@@ -95,6 +104,34 @@
           </form>
         </div>
       </div>
+
+      <div class="popup" id="set-avatar-popup">
+        <div class="popup__content">
+          <button
+            aria-label="Fechar pop-up"
+            class="popup__close"
+            type="button"
+          ></button>
+          <h3 class="popup__title">Alterar a foto do perfil</h3>
+          <form class="popup__form" id="set-avatar-form">
+            <input
+              required
+              class="popup__input popup__input_type_avatar"
+              id="avatar"
+              name="avatar"
+              placeholder=""
+              type="url"
+              minlength="8"
+              maxlength="140"
+            />
+            <span class="avatar-input-error popup__input-error"></span>
+            <button class="button popup__button" type="submit">Salvar</button>
+          </form>
+        </div>
+      </div>
+
+
+
       <div class="popup" id="new-card-popup">
         <div class="popup__content">
           <button
@@ -128,6 +165,10 @@
           </form>
         </div>
       </div>
+
+
+      
+
       <div class="popup" id="delete-card-popup">
         <div class="popup__content popup__content_content_confirmation">
           <button
@@ -136,12 +177,11 @@
             type="button"
           ></button>
           <h3 class="popup__title">Tem certeza?</h3>
-          <form class="popup__form " id="delete-card-form">
+          <form class="popup__form" id="delete-card-form">
             <button class="button popup__button" type="submit">Sim</button>
           </form>
         </div>
       </div>
-      <!--  fechamento div nova -->
       <div class="popup" id="image-popup">
         <div class="popup__content popup__content_content_image">
           <button
