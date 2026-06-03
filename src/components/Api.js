@@ -71,6 +71,7 @@ export default class Api {
       headers: this._headers
     }).then(this._checkResponse)
   }
+
   _checkResponse(res) {
     return res.ok ? res.json() : Promise.reject(`Error: ${res.status}`)
   }

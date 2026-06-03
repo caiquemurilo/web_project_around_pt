@@ -80,7 +80,9 @@ if (userData) {
 const editPopupFormInstance = new PopupWithForm(
   '#edit-popup',
   evt => {
+
     evt.preventDefault()
+    editPopupFormInstance.renderLoading(true)
     const { name, description } = editPopupFormInstance._getInputValues()
     api
       .setUserInfo({ name, about: description })
@@ -93,6 +95,9 @@ const editPopupFormInstance = new PopupWithForm(
       })
       .catch(err => {
         console.log(`Erro ao atualizar o perfil: ${err}`)
+      })
+      .finally(() => {
+        editPopupFormInstance.renderLoading(false)
       })
   },
   () => formValidatorEditProfile.resetFormValidation()
@@ -159,6 +164,7 @@ const newCardPopupFormInstance = new PopupWithForm(
   '#new-card-popup',
   evt => {
     evt.preventDefault()
+    newCardPopupFormInstance.renderLoading(true)
     const { 'place-name': placeName, link } =
       newCardPopupFormInstance._getInputValues()
 
@@ -180,6 +186,7 @@ const newCardPopupFormInstance = new PopupWithForm(
                   deleteCardPopupInstance.close()
                 })
                 .catch(err => console.log(`Erro ao deletar o cartão: ${err}`))
+
             })
             deleteCardPopupInstance.open()
           },
@@ -210,6 +217,9 @@ const newCardPopupFormInstance = new PopupWithForm(
       .catch(err => {
         console.log(`Erro ao criar cartão: ${err}`)
       })
+      .finally(() => {
+        newCardPopupFormInstance.renderLoading(false)
+      })
   },
   () => formValidatorNewCard.resetFormValidation()
 )
@@ -218,6 +228,7 @@ const setAvatarPopupFormInstance = new PopupWithForm(
   '#set-avatar-popup',
   evt => {
     evt.preventDefault()
+    setAvatarPopupFormInstance.renderLoading(true)
     const { avatar } = setAvatarPopupFormInstance._getInputValues()
 
     api
@@ -228,6 +239,9 @@ const setAvatarPopupFormInstance = new PopupWithForm(
       })
       .catch(err => {
         console.log(`Erro ao atualizar a foto de perfil: ${err}`)
+      })
+      .finally(() => {
+        setAvatarPopupFormInstance.renderLoading(false)
       })
   },
 
