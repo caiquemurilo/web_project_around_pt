@@ -104,9 +104,9 @@ const editPopupFormInstance = new PopupWithForm(
 )
 
 profileEditOpenBtn.addEventListener('click', () => {
-  const currentUserInfo = userInfo.getUserInfo()
-  nameInput.value = currentUserInfo.name
-  jobInput.value = currentUserInfo.description
+  const {name, description} = userInfo.getUserInfo()
+  nameInput.value = name
+  jobInput.value = description
   editPopupFormInstance.open()
 })
 const popupImageInstance = new PopupWithImage('#image-popup')
