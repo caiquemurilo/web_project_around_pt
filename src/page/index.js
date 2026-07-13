@@ -113,48 +113,53 @@ const popupImageInstance = new PopupWithImage('#image-popup')
 const deleteCardPopupInstance = new PopupWithConfirmation('#delete-card-popup')
 deleteCardPopupInstance.setEventListeners()
 
+function createCard(cardData) {
+  const cardInstance = new Card(
+    cardData,
+    '#card-template',
+    () => {
+      popupImageInstance.open(cardData.name, cardData.link)
+    },
+    () => {
+      deleteCardPopupInstance.setSubmitAction(() => {
+        api
+          .deleteCard(cardData)
+          .then(() => {
+            cardInstance.removeCard()
+            deleteCardPopupInstance.close()
+          })
+          .catch(err => console.log(`Erro ao deletar o cartão: ${err}`))
+      })
+      deleteCardPopupInstance.open()
+    },
+    () => {
+      if (cardInstance.isLiked()) {
+        api
+          .removeLike(cardData)
+          .then(updatedCard => {
+            cardInstance.updateLikeState(updatedCard.isLiked)
+          })
+          .catch(err => console.log(`Erro ao remover curtida: ${err}`))
+      } else {
+        api
+          .addLike(cardData)
+          .then(updatedCard => {
+            cardInstance.updateLikeState(updatedCard.isLiked)
+          })
+          .catch(err => console.log(`Erro ao adicionar curtida: ${err}`))
+      }
+    }
+  )
+  
+  return cardInstance.generateCard()
+}
+
 const cardSectionInstance = new Section(
   {
     items: initialCards,
     renderer: item => {
-      const cardInstance = new Card(
-        item,
-        '#card-template',
-        () => {
-          popupImageInstance.open(item.name, item.link)
-        },
-        () => {
-          deleteCardPopupInstance.setSubmitAction(() => {
-            api
-              .deleteCard(item)
-              .then(() => {
-                cardInstance.removeCard()
-                deleteCardPopupInstance.close()
-              })
-              .catch(err => console.log(`Erro ao deletar o cartão: ${err}`))
-          })
-          deleteCardPopupInstance.open()
-        },
-        () => {
-          if (cardInstance.isLiked()) {
-            api
-              .removeLike(item)
-              .then(updatedCard => {
-                cardInstance.updateLikeState(updatedCard.isLiked)
-              })
-              .catch(err => console.log(`Erro ao remover curtida: ${err}`))
-          } else {
-            api
-              .addLike(item)
-              .then(updatedCard => {
-                cardInstance.updateLikeState(updatedCard.isLiked)
-              })
-              .catch(err => console.log(`Erro ao adicionar curtida: ${err}`))
-          }
-        }
-      )
-      const card = cardInstance.generateCard()
-      cardSectionInstance.addItem(card)
+      const cardElement = createCard(item)
+      cardSectionInstance.addItem(cardElement)
     }
   },
   cardsContainerSelector
@@ -165,51 +170,14 @@ const newCardPopupFormInstance = new PopupWithForm(
   evt => {
     evt.preventDefault()
     newCardPopupFormInstance.renderLoading(true)
-    const { 'place-name': placeName, link } =
-      newCardPopupFormInstance._getInputValues()
+    const { 'place-name': placeName, link } = newCardPopupFormInstance._getInputValues()
 
     api
       .createCard({ name: placeName, link })
       .then(newCardData => {
-        const cardInstance = new Card(
-          newCardData,
-          '#card-template',
-          () => {
-            popupImageInstance.open(newCardData.name, newCardData.link)
-          },
-          () => {
-            deleteCardPopupInstance.setSubmitAction(() => {
-              api
-                .deleteCard(newCardData)
-                .then(() => {
-                  cardInstance.removeCard()
-                  deleteCardPopupInstance.close()
-                })
-                .catch(err => console.log(`Erro ao deletar o cartão: ${err}`))
-
-            })
-            deleteCardPopupInstance.open()
-          },
-
-          () => {
-            if (cardInstance.isLiked()) {
-              api
-                .removeLike(newCardData)
-                .then(updatedCard => {
-                  cardInstance.updateLikeState(updatedCard.isLiked)
-                })
-                .catch(err => console.log(`Erro ao remover curtida: ${err}`))
-            } else {
-              api
-                .addLike(newCardData)
-                .then(updatedCard => {
-                  cardInstance.updateLikeState(updatedCard.isLiked)
-                })
-                .catch(err => console.log(`Erro ao adicionar curtida: ${err}`))
-            }
-          }
-        )
-        const cardElement = cardInstance.generateCard()
+        
+       
+        const cardElement = createCard(newCardData)
         cardSectionInstance.addItem(cardElement)
 
         newCardPopupFormInstance.close()
